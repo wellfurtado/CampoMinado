@@ -6,13 +6,6 @@ Este é o **meu primeiro projeto** para o portfólio, um jogo de **Campo Minado*
 
 O **Campo Minado** é um jogo de lógica no qual o objetivo é encontrar todas as minas espalhadas por um campo sem detoná-las. O jogador deve marcar as minas corretamente, baseando-se nos números que indicam quantas minas existem ao redor de cada célula.
 
-## Funcionalidades
-
-- Campo de jogo personalizável (tamanho e quantidade de minas).
-- Interação simples: marcar células com bandeiras e revelar células sem minas.
-- Cálculo automático de áreas seguras ao revelar células sem minas adjacentes.
-- Interface em linha de comando (CLI).
-- Tratamento de vitória e derrota com mensagens informativas.
 
 ## Como Jogar
 
