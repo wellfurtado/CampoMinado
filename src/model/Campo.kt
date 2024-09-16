@@ -1,7 +1,5 @@
 package model
 
-import javax.security.auth.callback.Callback
-
 enum class CampoEvento { ABERTURA, MARCACAO, DESMARCACAO, EXPLOSAO, REINICIALIZACAO }
 
 data class Campo(val linha: Int, val coluna: Int) {
@@ -13,13 +11,14 @@ data class Campo(val linha: Int, val coluna: Int) {
     var aberto: Boolean = false
     var minado: Boolean = false
 
-//    somente leitura
+    // Somente leitura
     val desmarcado: Boolean get() = !marcado
     val fechado: Boolean get() = !aberto
     val seguro: Boolean get() = !minado
-    val objetivoAlcacado: Boolean get() = seguro && aberto || minado && marcado
-    val qtVizinhosMinados: Int get() = vizinhos.filter {it.minado}.size
-    val vizinhancaSegura: Boolean get() = vizinhos.map {it.seguro}.reduce { resultado, seguro -> resultado && seguro }
+    val objetivoAlcancado: Boolean get() = seguro && aberto || minado && marcado
+    val qtdeVizinhosMinados: Int get() = vizinhos.filter { it.minado }.size
+    val vizinhancaSegura: Boolean
+        get() = vizinhos.map { it.seguro }.reduce { resultado, seguro -> resultado && seguro }
 
     fun addVizinho(vizinho: Campo) {
         vizinhos.add(vizinho)
@@ -29,32 +28,34 @@ data class Campo(val linha: Int, val coluna: Int) {
         callbacks.add(callback)
     }
 
-    fun abrir(){
-        if (fechado){
+    fun abrir() {
+        if (fechado) {
             aberto = true
             if (minado) {
-                callbacks.forEach {it(this, CampoEvento.EXPLOSAO)}
+                callbacks.forEach { it(this, CampoEvento.EXPLOSAO) }
             } else {
-                callbacks.forEach {it(this, CampoEvento.ABERTURA)}
+                callbacks.forEach { it(this, CampoEvento.ABERTURA) }
                 vizinhos.filter { it.fechado && it.seguro && vizinhancaSegura }.forEach { it.abrir() }
             }
         }
     }
-    fun alterarMArcacao() {
+
+    fun alterarMarcacao() {
         if (fechado) {
             marcado = !marcado
-            val evento = if (marcado) CampoEvento.MARCACAO else CampoEvento.DESMARCACAO
-            callbacks.forEach {it(this, evento)}
+            val evento = if(marcado) CampoEvento.MARCACAO else CampoEvento.DESMARCACAO
+            callbacks.forEach { it(this, evento) }
         }
     }
 
-    fun minar(){
+    fun minar() {
         minado = true
     }
-    fun reiniciar(){
+
+    fun reiniciar() {
         aberto = false
         minado = false
         marcado = false
-        callbacks.forEach {it(this, CampoEvento.REINICIALIZACAO)}
+        callbacks.forEach { it(this, CampoEvento.REINICIALIZACAO) }
     }
 }

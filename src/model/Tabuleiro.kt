@@ -4,7 +4,7 @@ import kotlin.random.Random
 
 enum class TabuleiroEvento { VITORIA, DERROTA }
 
-class Tabuleiro (val qtdeLinhas: Int, val qtdeColunas: Int, private val qtdeMinas: Int) {
+class Tabuleiro(val qtdeLinhas: Int, val qtdeColunas: Int, private val qtdeMinas: Int) {
     private val campos = ArrayList<ArrayList<Campo>>()
     private val callbacks = ArrayList<(TabuleiroEvento) -> Unit>()
 
@@ -19,7 +19,7 @@ class Tabuleiro (val qtdeLinhas: Int, val qtdeColunas: Int, private val qtdeMina
             campos.add(ArrayList())
             for (coluna in 0 until qtdeColunas) {
                 val novoCampo = Campo(linha, coluna)
-                novoCampo.onEvento(this::verificarDerrotaouVitoria)
+                novoCampo.onEvento(this::verificarDerrotaOuVitoria)
                 campos[linha].add(novoCampo)
             }
         }
@@ -43,7 +43,7 @@ class Tabuleiro (val qtdeLinhas: Int, val qtdeColunas: Int, private val qtdeMina
     }
 
     private fun sortearMinas() {
-        var gerador = Random
+        val gerador = Random
 
         var linhaSorteada = -1
         var colunaSorteada = -1
@@ -53,7 +53,7 @@ class Tabuleiro (val qtdeLinhas: Int, val qtdeColunas: Int, private val qtdeMina
             linhaSorteada = gerador.nextInt(qtdeLinhas)
             colunaSorteada = gerador.nextInt(qtdeColunas)
 
-            val campoSorteado = campos [linhaSorteada][colunaSorteada]
+            val campoSorteado = campos[linhaSorteada][colunaSorteada]
             if (campoSorteado.seguro) {
                 campoSorteado.minar()
                 qtdeMinasAtual++
@@ -63,13 +63,13 @@ class Tabuleiro (val qtdeLinhas: Int, val qtdeColunas: Int, private val qtdeMina
 
     private fun objetivoAlcancado(): Boolean {
         var jogadorGanhou = true
-        forEachCampo { if(!it.objetivoAlcacado) jogadorGanhou = false }
+        forEachCampo { if (!it.objetivoAlcancado) jogadorGanhou = false }
         return jogadorGanhou
     }
 
-    private fun verificarDerrotaouVitoria(campo: Campo, evento: CampoEvento) {
+    private fun verificarDerrotaOuVitoria(campo: Campo, evento: CampoEvento) {
         if (evento == CampoEvento.EXPLOSAO) {
-            callbacks.forEach{ it(TabuleiroEvento.DERROTA)}
+            callbacks.forEach { it(TabuleiroEvento.DERROTA) }
         } else if (objetivoAlcancado()) {
             callbacks.forEach { it(TabuleiroEvento.VITORIA) }
         }
@@ -79,13 +79,12 @@ class Tabuleiro (val qtdeLinhas: Int, val qtdeColunas: Int, private val qtdeMina
         campos.forEach { linha -> linha.forEach(callback) }
     }
 
-    fun onEvento(calback: (TabuleiroEvento) -> Unit) {
-        callbacks.add(calback)
+    fun onEvento(callback: (TabuleiroEvento) -> Unit) {
+        callbacks.add(callback)
     }
 
     fun reiniciar() {
         forEachCampo { it.reiniciar() }
         sortearMinas()
     }
-
 }

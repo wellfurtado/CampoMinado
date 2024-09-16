@@ -15,12 +15,13 @@ private val COR_BG_EXPLOSAO = Color(189, 66, 68)
 private val COR_TXT_VERDE = Color(0, 100, 0)
 
 class BotaoCampo(private val campo: Campo) : JButton() {
+
     init {
         font = font.deriveFont(Font.BOLD)
         background = COR_BG_NORMAL
         isOpaque = true
         border = BorderFactory.createBevelBorder(0)
-        addMouseListener(MouseCliqueListener(campo, { it.abrir() }, { it.alterarMArcacao() }))
+        addMouseListener(MouseCliqueListener(campo, { it.abrir() }, { it.alterarMarcacao() }))
 
         campo.onEvento(this::aplicarEstilo)
     }
@@ -48,15 +49,15 @@ class BotaoCampo(private val campo: Campo) : JButton() {
         background = COR_BG_NORMAL
         border = BorderFactory.createLineBorder(Color.GRAY)
 
-        foreground = when (campo.qtVizinhosMinados) {
+        foreground = when (campo.qtdeVizinhosMinados) {
             1 -> COR_TXT_VERDE
             2 -> Color.BLUE
             3 -> Color.YELLOW
-            4,5,6 -> Color.RED
+            4, 5, 6 -> Color.RED
             else -> Color.PINK
         }
 
-        text = if (campo.qtVizinhosMinados  > 0) campo.qtVizinhosMinados.toString() else ""
+        text = if (campo.qtdeVizinhosMinados > 0) campo.qtdeVizinhosMinados.toString() else ""
     }
 
     private fun aplicarEstiloMarcado() {
